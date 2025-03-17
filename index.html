@@ -44,6 +44,11 @@
  <body class="__variable_4d318d __variable_ea5f4b antialiased">
       
     <!-- Loader Section -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" as="style">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap">
+    
     <div id="loader">
       <div class="loader-container">
           <div class="circle circle-outer"></div>
@@ -212,36 +217,56 @@
       }
 </style>
 <script>
-  // Simulate page loading
-  window.addEventListener('load', function() {
-      // Set the duration for the loader to be visible (in milliseconds)
-      const loaderDuration = 3000; // 3 seconds
-      
-      setTimeout(function() {
-          // Hide the loader
-          const loader = document.getElementById('loader');
-          loader.style.opacity = '0';
-          loader.style.visibility = 'hidden';
-          
-          // Show the content
-          const content = document.getElementById('content');
-          content.style.display = 'flex';
-          
-          // Small delay to start the fade-in effect after display is set
-          setTimeout(function() {
-              content.style.opacity = '1';
-              
-              // Enable scrolling after content is loaded
-              document.body.classList.add('loaded');
-          }, 50);
-          
-          // Remove the loader from DOM after transition completes
-          setTimeout(function() {
-              loader.remove();
-          }, 500);
-      }, loaderDuration);
-  });
+    // Preload critical resources
+    document.addEventListener('DOMContentLoaded', function() {
+        // Set the duration for the loader to be visible (in milliseconds)
+        const loaderDuration = 500; // Reduced to 500ms
+        
+        // Start hiding loader when either timeout occurs or window fully loads
+        const hideLoader = function() {
+            const loader = document.getElementById('loader');
+            if (!loader || loader.style.opacity === '0') return; // Prevent multiple calls
+            
+            // Hide the loader
+            loader.style.opacity = '0';
+            loader.style.visibility = 'hidden';
+            
+            // Show the content
+            const content = document.getElementById('content');
+            if (content) {
+                content.style.display = 'flex';
+                
+                // Small delay to start the fade-in effect after display is set
+                setTimeout(function() {
+                    content.style.opacity = '1';
+                    
+                    // Enable scrolling after content is loaded
+                    document.body.style.overflow = 'auto';
+                    document.body.classList.add('loaded');
+                }, 50);
+            } else {
+                // If content element doesn't exist, just enable scrolling
+                document.body.style.overflow = 'auto';
+                document.body.classList.add('loaded');
+            }
+            
+            // Remove the loader from DOM after transition completes
+            setTimeout(function() {
+                if (loader && loader.parentNode) {
+                    loader.parentNode.removeChild(loader);
+                }
+            }, 500);
+        };
+        
+        // Set timeout for minimum loader display
+        setTimeout(hideLoader, loaderDuration);
+        
+        // Also hide loader when window is fully loaded (whichever comes last)
+        window.addEventListener('load', hideLoader);
+    });
 </script>
+
+  
 <div> 
     <!--end of loader-->
 <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
@@ -1353,7 +1378,7 @@ document.addEventListener('DOMContentLoaded', function() {
 </div>
 
 <!-- Services Slider (Simplified Version) -->
-<div class="bg-green-50 py-16"style="background-image:url(_next/static/img/wall.jpg);background-size:cover;background-position:center">
+<div class="py-16"style="background-image:url(_next/static/img/wall.jpg);background-size:cover;background-position:center">
     <div class="max-w-7xl mx-auto px-4">
         <h2 class="text-4xl font-bold text-center mb-12">Our Services</h2>
         <script>
